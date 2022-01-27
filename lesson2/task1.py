@@ -10,8 +10,10 @@ import json
 from bs4 import BeautifulSoup
 from pprint import pprint
 
+search = input('Введите запрос: ')
+
 url = 'https://hh.ru'
-params = {'text': 'Python стажер', 'page': 1}
+params = {'text': search, 'page': 1}
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36'}
 
 vacancies  = []
@@ -29,7 +31,7 @@ while True:
 
         title = vacancy.find('a', {'data-qa': 'vacancy-serp__vacancy-title'})
         vacancy_data['name'] = title.getText()
-        vacancy_data['link'] = title.get('href')
+        vacancy_data['link'] = title.get('href').split('?')[0]
         vacancy_data['compensation_min'] = None
         vacancy_data['compensation_max'] = None
         vacancy_data['compensation_currency'] = None
@@ -58,5 +60,5 @@ while True:
 pprint(vacancies)
 print(f'Собрано {len(vacancies)} вакансий')
 
-with open('result.json', 'w') as file:
-    json.dump(vacancies, file)
+with open('result.json', 'w', encoding='utf8') as file:
+    json.dump(vacancies, file, ensure_ascii=False)
